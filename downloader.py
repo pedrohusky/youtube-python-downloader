@@ -218,13 +218,7 @@ class YouTubeDownloader:
             self.main_app.finish_label.configure(text=f"Processing metadata for: {yt.title}",
                                                  text_color="purple")
 
-            # Get the video's publish date
-            publish_date = yt.publish_date
-
-            # Format the date as MM/DD/YY
-            formatted_date = publish_date.strftime("%Y")
-
-            set_mp3_metadata_eyed3(mp3_path, yt.title, yt.author, formatted_date, "", image_data)
+            set_mp3_metadata_eyed3(mp3_path, yt.title, yt.author, yt.publish_date, "", image_data)
 
             self.main_app.finish_label.configure(text=f"All done: {yt.title}",
                                                  text_color="purple")
@@ -317,7 +311,7 @@ class YouTubeDownloader:
             video_path (str): The path to the video file.
             audio_path (str): The path to the audio file.
             thumbnail (str): The path to the thumbnail image.
-            yt (YouTube): A instance of the downloaded video..
+            yt (YouTube): A instance of the downloaded video.
 
         Returns:
             None
@@ -330,7 +324,7 @@ class YouTubeDownloader:
             if audio_path != video_path:
                 os.remove(video_path)
 
-        if self.main_app.selected_format.get().lower() == "mp4" or self.main_app.selected_format.get().lower() == "avi":
+        if self.main_app.selected_format.get().lower() in ["mp4", "avi", "mkv"]:
             self.main_app.finish_label.configure(text="Creating objects..", text_color="purple")
             video_clip = VideoFileClip(video_path)
             audio_clip = AudioFileClip(audio_path)
@@ -339,14 +333,14 @@ class YouTubeDownloader:
             final_clip = video_clip.set_audio(audio_clip)
 
             self.main_app.finish_label.configure(text="Processing video..", text_color="purple")
-            output_video_path = os.path.join(save_path, f"{title}-merged.{self.main_app.selected_format.get().lower()}")
+            output_video_path = os.path.join(save_path, f"{title}-converted.{self.main_app.selected_format.get().lower()}")
 
             try:
                 final_clip.write_videofile(output_video_path, codec='libx264', logger=self.logger)
                 os.remove(video_path)
                 os.remove(audio_path)
 
-                self.main_app.finish_label.configure(text="Download complete. Merged audio and video tracks.",
+                self.main_app.finish_label.configure(text="Download complete. Converted audio and video tracks.",
                                                      text_color="green")
             except IOError as e:
                 error_message = f"Error during video and audio merging: {str(e)}"

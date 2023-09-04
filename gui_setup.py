@@ -195,8 +195,17 @@ class YouTubeDownloaderApp:
             thumbnail_label = customtkinter.CTkLabel(self.video_info_frame, image=thumbnail, text='')
             thumbnail_label.grid(row=0, column=1, padx=10, pady=10)
 
+        video_title = self.yt.title
+        line_length = len(f"Published at: {self.yt.publish_date}") * 2  # Adjust the offset as needed
+        video_info = (f"{video_title}\n\n"
+                      f"{'-' * line_length}\n"
+                      f"Author: {self.yt.author}\n"
+                      f"Published at: {self.yt.publish_date}\n"
+                      f"Views: {self.yt.views}\n"
+                      f"{'-' * line_length}")
+
         # Label for video title
-        self.video_name_label = customtkinter.CTkLabel(self.video_info_frame, text=self.yt.title)
+        self.video_name_label = customtkinter.CTkLabel(self.video_info_frame, text=video_info, text_color="orange")
         self.video_name_label.grid(row=0, column=2, padx=10, pady=10)
 
         # Label for quality selection
