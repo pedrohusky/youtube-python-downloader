@@ -152,7 +152,7 @@ class YouTubeDownloaderApp:
 
         # Button to start download
         self.playlist_download_button = customtkinter.CTkButton(self.root, text="Download",
-                                                                command=self.downloader.download_playlst)
+                                                                command=self.downloader.download_playlist)
         self.playlist_download_button.pack(padx=10, pady=10)
         self.playlist_download_button.configure(state=tk.DISABLED)  # Initially disabled
 
@@ -441,7 +441,7 @@ class YouTubeDownloaderApp:
 
     def update_download_button_state(self):
         """
-        Updates the state of the download button based on the availability of required input.
+        Updates the state of the download button if the path is set.
 
         Returns:
             None
@@ -462,7 +462,7 @@ class YouTubeDownloaderApp:
 
     def update_playlist_download_button_state(self):
         """
-        Updates the state of the playlist download button based on the availability of required input.
+        Updates the state of the playlist download button if the path is set.
 
         Parameters:
             self (YouTubeDownloaderApp): The current instance of the class.
@@ -480,7 +480,7 @@ class YouTubeDownloaderApp:
                 self.playlist_download_button.configure(state=tk.NORMAL)  # Enable the button
             else:
                 self.playlist_download_button.configure(state=tk.DISABLED)  # Disable the button
-        except ValueError:
+        except AttributeError:
             pass
 
     def open_folder_selector(self):
@@ -495,7 +495,7 @@ class YouTubeDownloaderApp:
             try:
                 playlist_title = self.playlist_title_label.cget("text")
                 self.save_path_var.set(f"{folder_path}/{playlist_title}")
-            except LookupError:
+            except AttributeError:
                 self.save_path_var.set(f"{folder_path}")
 
         self.update_download_button_state()  # Update button state when folder selected
@@ -588,6 +588,6 @@ class YouTubeDownloaderApp:
 
 
 if __name__ == "__main__":
-    root = customtkinter.CTk()
-    app = YouTubeDownloaderApp(root)
-    root.mainloop()
+    GUI = customtkinter.CTk()
+    app = YouTubeDownloaderApp(GUI)
+    GUI.mainloop()

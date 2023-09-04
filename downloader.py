@@ -83,7 +83,7 @@ class YouTubeDownloader:
         # This method starts the download in a separate thread
         threading.Thread(target=self.download_in_background).start()
 
-    def download_playlst(self):
+    def download_playlist(self):
         """
         Starts the download of the playlist in a separate thread.
         """
@@ -321,10 +321,10 @@ class YouTubeDownloader:
             image_data = self.download_image(thumbnail, audio_path.split('\\')[-1])
             mp3_path = self.convert_mp3(True, save_path, audio_path.split('\\')[-1], yt, self.logger)
             self.try_update_metadata(yt, mp3_path, image_data)
-            if audio_path != video_path:
+            if audio_path != video_path and video_path != "":
                 os.remove(video_path)
 
-        if self.main_app.selected_format.get().lower() in ["mp4", "avi", "mkv"]:
+        if self.main_app.selected_format.get().lower() in ["mp4", "avi", "mkv"] and audio_path != video_path:
             self.main_app.finish_label.configure(text="Creating objects..", text_color="purple")
             video_clip = VideoFileClip(video_path)
             audio_clip = AudioFileClip(audio_path)
@@ -333,7 +333,8 @@ class YouTubeDownloader:
             final_clip = video_clip.set_audio(audio_clip)
 
             self.main_app.finish_label.configure(text="Processing video..", text_color="purple")
-            output_video_path = os.path.join(save_path, f"{title}-converted.{self.main_app.selected_format.get().lower()}")
+            output_video_path = os.path.join(save_path,
+                                             f"{title}-converted.{self.main_app.selected_format.get().lower()}")
 
             try:
                 final_clip.write_videofile(output_video_path, codec='libx264', logger=self.logger)
@@ -363,7 +364,6 @@ class YouTubeDownloader:
         selected_quality = self.main_app.quality_var.get()
         video_path = ''
         self.audio_path = ''
-        is_audio_and_video = is_audio_only and is_video_only
 
         title = (f"{self.main_app.yt.title.replace(' ', '_').replace(':', '-').replace('|', '-')}"
                  f"-{selected_quality.split(' - ')[0]}")
@@ -385,10 +385,9 @@ class YouTubeDownloader:
         if is_video_only:
             video_path = self.download_video(title, save_path, video_stream)
 
-        if is_audio_and_video:
-            if self.audio_path == "":
-                self.audio_path = video_path
-            self.merge_audio_and_video(title, save_path, video_path, self.audio_path, thumbnail, self.main_app.yt)
+        if self.audio_path == "":
+            self.audio_path = video_path
+        self.merge_audio_and_video(title, save_path, video_path, self.audio_path, thumbnail, self.main_app.yt)
 
     def fetch_qualities(self):
         """
