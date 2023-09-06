@@ -323,7 +323,8 @@ class YouTubeDownloader:
             self.try_update_metadata(yt, mp3_path, image_data)
             if audio_path != video_path and video_path != "":
                 os.remove(video_path)
-        elif self.main_app.selected_format.get().lower() in ["mp4", "avi", "mkv"] and audio_path != video_path and video_path != "":
+        elif (self.main_app.selected_format.get().lower() in ["mp4", "avi", "mkv"]
+              and audio_path != video_path and video_path != ""):
             self.main_app.finish_label.configure(text="Creating objects..", text_color="purple")
             video_clip = VideoFileClip(video_path)
             audio_clip = AudioFileClip(audio_path)
@@ -345,7 +346,7 @@ class YouTubeDownloader:
             except IOError as e:
                 error_message = f"Error during video and audio merging: {str(e)}"
                 self.main_app.finish_label.configure(text=error_message, text_color="red")
-        else:
+        elif self.main_app.selected_format.get().lower() != "no conversion":
             self.main_app.finish_label.configure(text="To convert to any format besides MP3 you need to enable both "
                                                       "outputs.", text_color="red")
             if audio_path != video_path and video_path != "":
