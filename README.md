@@ -31,17 +31,22 @@ Ah, the name origin: You<sub>tu</sub>b<sub>eDownload</sub>er -> **Youber**
 
 To use Youber, follow these steps:
 
-1. Run Youber using Python:
-```
-python main.py
-```
+1. First of all, install requirements: 
+- ```
+  pip install requirements.txt
+  ```
 
-2. Alternatively, you can execute the pre-built executable located in the `/dist/` directory.
+2. Run Youber using Python:
+- ```bash
+  python main.py
+  ```
 
-3. If you prefer, create your own executable using the `create_exe.py` file by running:
-```
-python create_exe.py
-```
+3. Alternatively, you can execute the pre-built executable located in the `/dist/` directory.
+
+4. If you prefer, create your own executable using the `create_exe.py` file by running:
+- ```bash
+  python create_exe.py
+  ```
 
 
 
